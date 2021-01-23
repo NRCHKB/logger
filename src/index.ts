@@ -5,17 +5,23 @@ type CallbackType = {
     (message: string): void
 }
 
-type Logger = {
+export type Loggers = {
     debug: CallbackType
     error: (message: string, nodeError?: boolean) => void
     trace: CallbackType
 }
 
+export type Logger = (
+    namespace?: string,
+    messagePrefix?: string,
+    node?: Node
+) => Loggers
+
 const logDebugColor = '4'
 const logErrorColor = '9'
 const logTraceColor = '15'
 
-const log = (
+const logMessage = (
     callback: CallbackType,
     prefix?: string,
     node?: Node
@@ -31,14 +37,10 @@ const log = (
     }
 }
 
-export const logger = (
-    namespace?: string,
-    messagePrefix?: string,
-    node?: Node
-): Logger => {
+export const logger: Logger = (namespace, messagePrefix, node?) => {
     const debug = Debug(namespace ? `NRCHKB:${namespace}` : 'NRCHKB')
     debug.color = logDebugColor
-    const logDebug = log(debug, messagePrefix, node)
+    const logDebug = logMessage(debug, messagePrefix, node)
 
     const error = Debug(
         namespace ? `NRCHKB-Error:${namespace}` : 'NRCHKB-Error'
@@ -50,14 +52,14 @@ export const logger = (
             node.error(message)
         }
 
-        log(error, messagePrefix, node)(message)
+        logMessage(error, messagePrefix, node)(message)
     }
 
     const trace = Debug(
         namespace ? `NRCHKB-Trace:${namespace}` : 'NRCHKB-Trace'
     )
     trace.color = logTraceColor
-    const logTrace = log(trace, messagePrefix, node)
+    const logTrace = logMessage(trace, messagePrefix, node)
 
     return {
         debug: logDebug,
@@ -68,3 +70,5 @@ export const logger = (
 
 // noinspection JSUnusedGlobalSymbols
 export default logger
+
+module.exports = logger
