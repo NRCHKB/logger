@@ -1,7 +1,7 @@
 {
   "name": "@nrchkb/logger",
-  "version": "1.0.0-dev.0",
-  "description": "Node-RED nodes to simulate Apple HomeKit devices.",
+  "version": "1.0.0-dev.1",
+  "description": "Unified Logger for Node-RED nodes (using debug)",
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NRCHKB/node-red-contrib-homekit-bridged.git"
+    "url": "git+https://github.com/NRCHKB/logger.git"
   },
   "keywords": [
     "homekit",
@@ -25,9 +25,9 @@
   "author": "Tadeusz Wyrzykowski <tadeusz@hey.com> (https://github.com/Shaquu)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/NRCHKB/node-red-contrib-homekit-bridged/issues"
+    "url": "https://github.com/NRCHKB/logger/issues"
   },
-  "homepage": "https://github.com/NRCHKB/node-red-contrib-homekit-bridged#readme",
+  "homepage": "https://github.com/NRCHKB/logger#readme",
   "dependencies": {
     "debug": "^4.3.1"
   },

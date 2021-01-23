@@ -314,8 +314,7 @@ $RECYCLE.BIN/
 .idea
 .vscode
 
-build/**/*.js
-!build/helper/preinstall.js
+*.js
 
 *.d.ts
 
