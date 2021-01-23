@@ -7,7 +7,7 @@ type CallbackType = {
 
 type Logger = {
     debug: CallbackType
-    error: (message: string, nodeError: boolean) => void
+    error: (message: string, nodeError?: boolean) => void
     trace: CallbackType
 }
 
