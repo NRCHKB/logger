@@ -1,11 +1,11 @@
 {
   "name": "@nrchkb/logger",
-  "version": "1.0.0-dev.3",
+  "version": "1.0.0",
   "description": "Unified Logger for Node-RED nodes (using debug)",
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "yarn build && mocha -r ts-node/register './src/**/*.test.[tj]s' --exit",
+    "test": "yarn build && cross-env DEBUG=LOGGER* mocha -r ts-node/register './src/**/*.test.[tj]s' --exit",
     "prettier": "prettier --write \"src/**/*.{js,ts}\"",
     "lint": "eslint src/**/*.{js,ts} --fix"
   },
@@ -14,13 +14,10 @@
     "url": "git+https://github.com/NRCHKB/logger.git"
   },
   "keywords": [
-    "homekit",
-    "hap-nodejs",
     "node-red",
-    "iot",
-    "home",
     "NRCHKB",
-    "homebridge"
+    "logger",
+    "debug"
   ],
   "author": "Tadeusz Wyrzykowski <tadeusz@hey.com> (https://github.com/Shaquu)",
   "license": "Apache-2.0",
@@ -36,9 +33,10 @@
     "@types/mocha": "^8.2.0",
     "@types/node": "^10.17.50",
     "@types/node-red": "^1.1.1",
-    "@typescript-eslint/eslint-plugin": "^4.14.0",
-    "@typescript-eslint/parser": "^4.14.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
     "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",

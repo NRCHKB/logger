@@ -1,25 +1,60 @@
 import Debug from 'debug'
 import { Node } from 'node-red'
+import { CallbackType, Logger, LoggerSetupData } from './types'
 
-type CallbackType = {
-    (message: string): void
+let LOGGER_DEBUG_COLOR = process.env.LOGGER_DEBUG_COLOR || '4'
+let LOGGER_ERROR_COLOR = process.env.LOGGER_ERROR_COLOR || '9'
+let LOGGER_TRACE_COLOR = process.env.LOGGER_TRACE_COLOR || '15'
+let LOGGER_DEBUG_ENABLED =
+    process.env.LOGGER_DEBUG_ENABLED &&
+    process.env.LOGGER_DEBUG_ENABLED === 'true'
+let LOGGER_ERROR_ENABLED =
+    (process.env.LOGGER_ERROR_ENABLED &&
+        process.env.LOGGER_ERROR_ENABLED === 'true') ||
+    true
+let LOGGER_TRACE_ENABLED =
+    process.env.LOGGER_TRACE_ENABLED &&
+    process.env.LOGGER_TRACE_ENABLED === 'true'
+
+let LOGGER_NAMESPACE_PREFIX = process.env.LOGGER_NAMESPACE_PREFIX || 'NRCHKB'
+
+export const loggerSetup = ({
+    namespacePrefix,
+    debugColor,
+    debugEnabled,
+    errorColor,
+    errorEnabled,
+    traceColor,
+    traceEnabled,
+}: LoggerSetupData): void => {
+    if (namespacePrefix) {
+        LOGGER_NAMESPACE_PREFIX = namespacePrefix
+    }
+
+    if (debugColor) {
+        LOGGER_DEBUG_COLOR = debugColor
+    }
+
+    if (debugEnabled) {
+        LOGGER_DEBUG_ENABLED = debugEnabled
+    }
+
+    if (errorColor) {
+        LOGGER_ERROR_COLOR = errorColor
+    }
+
+    if (errorEnabled) {
+        LOGGER_ERROR_ENABLED = errorEnabled
+    }
+
+    if (traceColor) {
+        LOGGER_TRACE_COLOR = traceColor
+    }
+
+    if (traceEnabled) {
+        LOGGER_TRACE_ENABLED = traceEnabled
+    }
 }
-
-export type Loggers = {
-    debug: CallbackType
-    error: (message: string, nodeError?: boolean) => void
-    trace: CallbackType
-}
-
-export type Logger = (
-    namespace?: string,
-    messagePrefix?: string,
-    node?: Node
-) => Loggers
-
-const logDebugColor = '4'
-const logErrorColor = '9'
-const logTraceColor = '15'
 
 const logMessage = (
     callback: CallbackType,
@@ -38,15 +73,26 @@ const logMessage = (
 }
 
 export const logger: Logger = (namespace, messagePrefix, node?) => {
-    const debug = Debug(namespace ? `NRCHKB:${namespace}` : 'NRCHKB')
-    debug.color = logDebugColor
+    //DEBUG
+    const debug = Debug(
+        namespace
+            ? `${LOGGER_NAMESPACE_PREFIX}:${namespace}`
+            : LOGGER_NAMESPACE_PREFIX
+    )
+    debug.color = LOGGER_DEBUG_COLOR
+    if (LOGGER_DEBUG_ENABLED) {
+        debug.enabled = LOGGER_DEBUG_ENABLED
+    }
     const logDebug = logMessage(debug, messagePrefix, node)
 
+    //ERROR
     const error = Debug(
-        namespace ? `NRCHKB-Error:${namespace}` : 'NRCHKB-Error'
+        namespace
+            ? `${LOGGER_NAMESPACE_PREFIX}-Error:${namespace}`
+            : `${LOGGER_NAMESPACE_PREFIX}-Error`
     )
-    error.enabled = true
-    error.color = logErrorColor
+    error.color = LOGGER_ERROR_COLOR
+    error.enabled = LOGGER_ERROR_ENABLED
     const logError = (message: string, nodeError = true) => {
         if (node && nodeError) {
             node.error(message)
@@ -55,10 +101,16 @@ export const logger: Logger = (namespace, messagePrefix, node?) => {
         logMessage(error, messagePrefix, node)(message)
     }
 
+    //TRACE
     const trace = Debug(
-        namespace ? `NRCHKB-Trace:${namespace}` : 'NRCHKB-Trace'
+        namespace
+            ? `${LOGGER_NAMESPACE_PREFIX}-Trace:${namespace}`
+            : `${LOGGER_NAMESPACE_PREFIX}-Trace`
     )
-    trace.color = logTraceColor
+    trace.color = LOGGER_TRACE_COLOR
+    if (LOGGER_TRACE_ENABLED) {
+        trace.enabled = LOGGER_TRACE_ENABLED
+    }
     const logTrace = logMessage(trace, messagePrefix, node)
 
     return {
@@ -68,7 +120,4 @@ export const logger: Logger = (namespace, messagePrefix, node?) => {
     }
 }
 
-// noinspection JSUnusedGlobalSymbols
-export default logger
-
-module.exports = logger
+module.exports = { logger, loggerSetup }
