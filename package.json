@@ -1,6 +1,6 @@
 {
   "name": "@nrchkb/logger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unified Logger for Node-RED nodes (using debug)",
   "main": "src/index.js",
   "scripts": {
