@@ -16,10 +16,7 @@ let LOGGER_TRACE_ENABLED =
     process.env.LOGGER_TRACE_ENABLED &&
     process.env.LOGGER_TRACE_ENABLED === 'true'
 
-let LOGGER_NAMESPACE_PREFIX = process.env.LOGGER_NAMESPACE_PREFIX || 'NRCHKB'
-
 export const loggerSetup = ({
-    namespacePrefix,
     debugColor,
     debugEnabled,
     errorColor,
@@ -27,10 +24,6 @@ export const loggerSetup = ({
     traceColor,
     traceEnabled,
 }: LoggerSetupData): void => {
-    if (namespacePrefix) {
-        LOGGER_NAMESPACE_PREFIX = namespacePrefix
-    }
-
     if (debugColor) {
         LOGGER_DEBUG_COLOR = debugColor
     }
@@ -72,12 +65,15 @@ const logMessage = (
     }
 }
 
-export const logger: Logger = (namespace, messagePrefix, node?) => {
+export const logger: Logger = (
+    namespacePrefix,
+    namespace,
+    messagePrefix,
+    node?
+) => {
     //DEBUG
     const debug = Debug(
-        namespace
-            ? `${LOGGER_NAMESPACE_PREFIX}:${namespace}`
-            : LOGGER_NAMESPACE_PREFIX
+        namespace ? `${namespacePrefix}:${namespace}` : namespacePrefix
     )
     debug.color = LOGGER_DEBUG_COLOR
     if (LOGGER_DEBUG_ENABLED) {
@@ -88,8 +84,8 @@ export const logger: Logger = (namespace, messagePrefix, node?) => {
     //ERROR
     const error = Debug(
         namespace
-            ? `${LOGGER_NAMESPACE_PREFIX}-Error:${namespace}`
-            : `${LOGGER_NAMESPACE_PREFIX}-Error`
+            ? `${namespacePrefix}-Error:${namespace}`
+            : `${namespacePrefix}-Error`
     )
     error.color = LOGGER_ERROR_COLOR
     error.enabled = LOGGER_ERROR_ENABLED
@@ -104,8 +100,8 @@ export const logger: Logger = (namespace, messagePrefix, node?) => {
     //TRACE
     const trace = Debug(
         namespace
-            ? `${LOGGER_NAMESPACE_PREFIX}-Trace:${namespace}`
-            : `${LOGGER_NAMESPACE_PREFIX}-Trace`
+            ? `${namespacePrefix}-Trace:${namespace}`
+            : `${namespacePrefix}-Trace`
     )
     trace.color = LOGGER_TRACE_COLOR
     if (LOGGER_TRACE_ENABLED) {

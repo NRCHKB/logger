@@ -11,7 +11,6 @@ export type Loggers = {
 }
 
 export type LoggerSetupData = {
-    namespacePrefix?: string
     debugColor?: string
     debugEnabled?: boolean
     errorColor?: string
@@ -21,6 +20,7 @@ export type LoggerSetupData = {
 }
 
 export type Logger = (
+    namespacePrefix: string,
     namespace?: string,
     messagePrefix?: string,
     node?: Node

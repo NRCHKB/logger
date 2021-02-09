@@ -21,7 +21,7 @@ Code
 ```typescript
 import {logger} from "@nrchkb/logger";
 
-const log = logger()
+const log = logger('YOUR_NODE_SHORT_NAME')
 
 log.debug('Debug message')
 log.error('Error message')
@@ -39,14 +39,15 @@ If you want you can pass addional parameters to logger method to make its log me
 ```typescript
 // Having Node-RED node in context, node name is TestHTTPNode, id is 1234567890
 let log
-log = logger('OUT', 'HTTP')
+log = logger('BASE_NAMESPACE', 'OUT', 'HTTP')
 //or
-log = logger('OUT', this.name, this)
+log = logger('BASE_NAMESPACE', 'OUT', this.name, this)
 ```
 
-- First argument is suffix namespace used in log message `BASE_NAMESPACE:OUT Some Message`
-- Second is a message prefix `BASE_NAMESPACE:OUT [HTTP] Some Message`
-- Third, if provided will override message prefix with node name and
+- First argument is namespace prefix used in log message `BASE_NAMESPACE:OUT Some Message`
+- Second argument is suffix namespace used in log message `BASE_NAMESPACE:OUT Some Message`
+- Third is a message prefix `BASE_NAMESPACE:OUT [HTTP] Some Message`
+- Forth, if provided will override message prefix with node name and
   id  `BASE_NAMESPACE:OUT [TestHTTPNode:1234567890] Some Message`
 
 ## Customization
@@ -60,8 +61,6 @@ let LOGGER_TRACE_COLOR = process.env.LOGGER_TRACE_COLOR || '15'
 let LOGGER_DEBUG_ENABLED = (process.env.LOGGER_DEBUG_ENABLED === 'true') || false
 let LOGGER_ERROR_ENABLED = (process.env.LOGGER_ERROR_ENABLED === 'true') || true
 let LOGGER_TRACE_ENABLED = (process.env.LOGGER_TRACE_ENABLED === 'true') || false
-
-let LOGGER_NAMESPACE_PREFIX = process.env.LOGGER_NAMESPACE_PREFIX || 'NRCHKB'
 ```
 
 Colors are defined via numbers. Depending on which device you are running your app different range of colors will be
@@ -71,10 +70,10 @@ All params listed above can be either changed with env variable or setup method
 
 ### env parameter
 
-For example to change base namespace to MYAPP
+For example to change debug logs color to pin
 
 ```bash
-LOGGER_NAMESPACE_PREFIX=MYAPP DEBUG=MYAPP* yourApp.js
+LOGGER_DEBUG_COLOR=13 DEBUG=MYAPP* yourApp.js
 ```
 
 ### setup method
@@ -85,7 +84,6 @@ All params are optional, so you can choose which you want to change
 import {loggerSetup} from "@nrchkb/logger";
 
 loggerSetup({
-    namespacePrefix: 'EXAMPLE',
     debugColor: '9',
     debugEnabled: false,
     errorColor: '10',
@@ -104,4 +102,4 @@ Join us on our Discord server (click on the logo below)!
 ## Contact us
 
 - [Our Discord server](https://discord.gg/uvYac5u) [![NRCHKB Discord](https://img.shields.io/discord/586065987267330068.svg?label=Discord)](https://discord.gg/amwV5tq)
-- [Mail directly to Shaquu](mailto:shaquu.github@gmail.com?subject=[NRCHKB])
+- [Mail directly to Shaquu](mailto:tadeusz@hey.com?subject=[@nrchkb/logger])
