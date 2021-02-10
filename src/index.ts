@@ -89,12 +89,18 @@ export const logger: Logger = (
     )
     error.color = LOGGER_ERROR_COLOR
     error.enabled = LOGGER_ERROR_ENABLED
-    const logError = (message: string, nodeError = true) => {
-        if (node && nodeError) {
-            node.error(message)
+    const logError = (
+        message: string,
+        nodeError = true,
+        injectedNode?: Node
+    ) => {
+        const nodeToUse = injectedNode || node
+
+        if (nodeToUse && nodeError) {
+            nodeToUse.error(message)
         }
 
-        logMessage(error, messagePrefix, node)(message)
+        logMessage(error, messagePrefix, nodeToUse)(message)
     }
 
     //TRACE

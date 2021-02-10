@@ -6,7 +6,7 @@ export type CallbackType = {
 
 export type Loggers = {
     debug: CallbackType
-    error: (message: string, nodeError?: boolean) => void
+    error: (message: string, nodeError?: boolean, injectedNode?: Node) => void
     trace: CallbackType
 }
 
