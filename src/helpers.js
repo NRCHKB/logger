@@ -1,5 +1,8 @@
 const namespaces = []
 
+const dateOptions = { day: '2-digit', month: 'short' }
+const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' }
+
 const setTimestamp = (debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix) => {
     if (LOGGER_TIMESTAMP_ENABLED) {
         namespaces.push(
@@ -13,17 +16,19 @@ const setTimestamp = (debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix) => {
         const { namespace: name, useColors } = this
 
         if (useColors) {
+            let timestamp = '  '
+
             const useTimestamp =
                 namespaces.findIndex((n) => name.startsWith(n)) >= 0
-            const timestamp = useTimestamp
-                ? new Date().toLocaleString('en-GB', {
-                      day: '2-digit',
-                      month: 'short',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                      second: 'numeric',
-                  }) + ' '
-                : '  '
+
+            if (useTimestamp) {
+                const date = new Date()
+                timestamp =
+                    date.toLocaleDateString('en-GB', dateOptions) +
+                    ' ' +
+                    date.toLocaleTimeString('en-GB', timeOptions) +
+                    ' '
+            }
 
             const c = this.color
             const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c)
