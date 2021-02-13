@@ -86,12 +86,7 @@ export const logger: Logger = (
     messagePrefix,
     node?
 ) => {
-    helpers.setTimestamp(
-        Debug,
-        LOGGER_TIMESTAMP_ENABLED,
-        namespacePrefix,
-        namespace
-    )
+    helpers.setTimestamp(Debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix)
 
     //DEBUG
     const debug = Debug(

@@ -1,22 +1,11 @@
 const namespaces = []
 
-const setTimestamp = (
-    debug,
-    LOGGER_TIMESTAMP_ENABLED,
-    namespacePrefix,
-    namespace = ''
-) => {
+const setTimestamp = (debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix) => {
     if (LOGGER_TIMESTAMP_ENABLED) {
         namespaces.push(
             namespacePrefix,
             namespacePrefix + '-Trace',
-            namespacePrefix + '-Error',
-            namespacePrefix + ':',
-            namespacePrefix + '-Trace:',
-            namespacePrefix + '-Error:',
-            namespacePrefix + ':' + namespace,
-            namespacePrefix + '-Trace:' + namespace,
-            namespacePrefix + '-Error:' + namespace
+            namespacePrefix + '-Error'
         )
     }
 
@@ -24,7 +13,9 @@ const setTimestamp = (
         const { namespace: name, useColors } = this
 
         if (useColors) {
-            const timestamp = namespaces.includes(this?.namespace)
+            const useTimestamp =
+                namespaces.findIndex((n) => name.startsWith(n)) >= 0
+            const timestamp = useTimestamp
                 ? new Date().toLocaleString('en-GB', {
                       day: '2-digit',
                       month: 'short',
@@ -44,6 +35,13 @@ const setTimestamp = (
                 colorCode + 'm+' + debug.humanize(this.diff) + '\u001B[0m'
             )
         } else {
+            const getDate = () => {
+                if (debug.inspectOpts.hideDate) {
+                    return ''
+                }
+                return new Date().toISOString() + ' '
+            }
+
             args[0] = getDate() + name + ' ' + args[0]
         }
     }
