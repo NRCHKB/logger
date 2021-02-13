@@ -58,9 +58,19 @@ Parameters
 let LOGGER_DEBUG_COLOR = process.env.LOGGER_DEBUG_COLOR || '4'
 let LOGGER_ERROR_COLOR = process.env.LOGGER_ERROR_COLOR || '9'
 let LOGGER_TRACE_COLOR = process.env.LOGGER_TRACE_COLOR || '15'
-let LOGGER_DEBUG_ENABLED = (process.env.LOGGER_DEBUG_ENABLED === 'true') || false
-let LOGGER_ERROR_ENABLED = (process.env.LOGGER_ERROR_ENABLED === 'true') || true
-let LOGGER_TRACE_ENABLED = (process.env.LOGGER_TRACE_ENABLED === 'true') || false
+
+let LOGGER_DEBUG_ENABLED =
+        process.env.LOGGER_DEBUG_ENABLED &&
+        process.env.LOGGER_DEBUG_ENABLED === 'true'
+let LOGGER_ERROR_ENABLED =
+        (process.env.LOGGER_ERROR_ENABLED &&
+                process.env.LOGGER_ERROR_ENABLED === 'true') ||
+        true
+let LOGGER_TRACE_ENABLED =
+        process.env.LOGGER_TRACE_ENABLED &&
+        process.env.LOGGER_TRACE_ENABLED === 'true'
+
+let LOGGER_TIMESTAMP_ENABLED = process.env.LOGGER_TIMESTAMP_ENABLED || false
 ```
 
 Colors are defined via numbers. Depending on which device you are running your app different range of colors will be

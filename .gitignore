@@ -315,6 +315,7 @@ $RECYCLE.BIN/
 .vscode
 
 *.js
+!src/helpers.js
 
 *.d.ts
 

@@ -66,4 +66,41 @@ describe('Logger', function () {
 
         done()
     })
+
+    it('set timestamp', function (done) {
+        const { logger, loggerSetup } = require('../index')
+
+        loggerSetup({
+            timestampEnabled: true,
+        })
+
+        const log1 = logger('LOGGER_TIMESTAMP')
+
+        log1.debug('Red')
+        log1.error('Green')
+        log1.trace('Yellow')
+
+        loggerSetup({
+            timestampEnabled: false,
+        })
+
+        loggerSetup({
+            timestampEnabled:
+                'LOGGER_TIMESTAMP_CHECK_1,LOGGER_TIMESTAMP_CHECK_2',
+        })
+
+        const log2 = logger('LOGGER_TIMESTAMP_CHECK_1')
+
+        log2.debug('Red')
+        log2.error('Green')
+        log2.trace('Yellow')
+
+        const log3 = logger('LOGGER_TIMESTAMP_CHECK_2')
+
+        log3.debug('Red')
+        log3.error('Green')
+        log3.trace('Yellow')
+
+        done()
+    })
 })

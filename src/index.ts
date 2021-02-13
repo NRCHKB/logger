@@ -2,6 +2,8 @@ import Debug from 'debug'
 import { Node } from 'node-red'
 import { CallbackType, Logger, LoggerSetupData } from './types'
 
+const helpers = require('./helpers')
+
 let LOGGER_DEBUG_COLOR = process.env.LOGGER_DEBUG_COLOR || '4'
 let LOGGER_ERROR_COLOR = process.env.LOGGER_ERROR_COLOR || '9'
 let LOGGER_TRACE_COLOR = process.env.LOGGER_TRACE_COLOR || '15'
@@ -16,6 +18,8 @@ let LOGGER_TRACE_ENABLED =
     process.env.LOGGER_TRACE_ENABLED &&
     process.env.LOGGER_TRACE_ENABLED === 'true'
 
+let LOGGER_TIMESTAMP_ENABLED = process.env.LOGGER_TIMESTAMP_ENABLED || false
+
 export const loggerSetup = ({
     debugColor,
     debugEnabled,
@@ -23,29 +27,40 @@ export const loggerSetup = ({
     errorEnabled,
     traceColor,
     traceEnabled,
+    timestampEnabled,
 }: LoggerSetupData): void => {
-    if (debugColor) {
+    if (debugColor !== undefined) {
         LOGGER_DEBUG_COLOR = debugColor
     }
 
-    if (debugEnabled) {
+    if (debugEnabled !== undefined) {
         LOGGER_DEBUG_ENABLED = debugEnabled
     }
 
-    if (errorColor) {
+    if (errorColor !== undefined) {
         LOGGER_ERROR_COLOR = errorColor
     }
 
-    if (errorEnabled) {
+    if (errorEnabled !== undefined) {
         LOGGER_ERROR_ENABLED = errorEnabled
     }
 
-    if (traceColor) {
+    if (traceColor !== undefined) {
         LOGGER_TRACE_COLOR = traceColor
     }
 
-    if (traceEnabled) {
+    if (traceEnabled !== undefined) {
         LOGGER_TRACE_ENABLED = traceEnabled
+    }
+
+    if (timestampEnabled !== undefined) {
+        if (typeof timestampEnabled === 'boolean') {
+            LOGGER_TIMESTAMP_ENABLED = timestampEnabled
+        } else {
+            timestampEnabled.split(',').forEach((n) => {
+                helpers.setTimestamp(Debug, true, n)
+            })
+        }
     }
 }
 
@@ -71,6 +86,13 @@ export const logger: Logger = (
     messagePrefix,
     node?
 ) => {
+    helpers.setTimestamp(
+        Debug,
+        LOGGER_TIMESTAMP_ENABLED,
+        namespacePrefix,
+        namespace
+    )
+
     //DEBUG
     const debug = Debug(
         namespace ? `${namespacePrefix}:${namespace}` : namespacePrefix

@@ -17,6 +17,7 @@ export type LoggerSetupData = {
     errorEnabled?: boolean
     traceColor?: string
     traceEnabled?: boolean
+    timestampEnabled?: boolean | string
 }
 
 export type Logger = (
