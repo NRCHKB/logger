@@ -6,7 +6,7 @@ Unified Logger for Node-RED nodes (using debug)
 
 ## Install
 
-``yarn add @nrchkb/logger``
+``npm i -d @nrchkb/logger``
 
 ## How to use
 
