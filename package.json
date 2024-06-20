@@ -1,11 +1,12 @@
 {
   "name": "@nrchkb/logger",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "Unified Logger for Node-RED nodes (using debug)",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "scripts": {
-    "build": "tsc",
-    "test": "yarn build && cross-env DEBUG=LOGGER* mocha -r ts-node/register './src/**/*.test.[tj]s' --exit",
+    "build": "npm run clean && tsc",
+    "clean": "del-cli \"./build\"",
+    "test": "cross-env DEBUG=LOGGER* mocha -r ts-node/register './src/**/*.test.[tj]s' --exit",
     "prettier": "prettier --write \"**/*.{js,ts}\"",
     "eslint": "eslint src/**/*.{js,ts} --fix"
   },
@@ -19,41 +20,35 @@
     "logger",
     "debug"
   ],
-  "contributors": [
-    {
-      "name": "Tadeusz Wyrzykowski",
-      "email": "shaquu@icloud.com",
-      "url": "https://github.com/Shaquu"
-    }
-  ],
+  "author": "Tadeusz Wyrzykowski <shaquu@icloud.com> (https://github.com/Shaquu)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/NRCHKB/logger/issues"
   },
   "homepage": "https://github.com/NRCHKB/logger#readme",
   "dependencies": {
-    "@types/debug": "^4.1.12",
-    "debug": "^4.3.4"
+    "debug": "^4.3.5"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.19",
-    "@types/node-red": "^1.3.4",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
+    "@types/node": "^18",
+    "@types/node-red": "^1.3.5",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.56.0",
+    "del-cli": "^5.1.0",
+    "eslint": "^8",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
-    "mocha": "^10.3.0",
-    "node-red": "^3.1.5",
-    "node-red-node-test-helper": "^0.3.3",
-    "prettier": "^3.2.5",
+    "mocha": "^10.4.0",
+    "node-red": "^4.0.0",
+    "node-red-node-test-helper": "^0.3.4",
+    "prettier": "^3.3.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.5.2"
   },
   "files": [
-    "/src"
+    "/build"
   ]
 }

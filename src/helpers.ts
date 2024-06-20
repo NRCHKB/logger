@@ -1,9 +1,22 @@
-const namespaces = []
+import { Debug } from './types/debug'
 
-const dateOptions = { day: '2-digit', month: 'short' }
-const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' }
+const namespaces: string[] = []
 
-const setTimestamp = (debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix) => {
+const dateOptions: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: 'short',
+}
+const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+}
+
+export const setTimestamp = (
+    debug: Debug,
+    LOGGER_TIMESTAMP_ENABLED: string | boolean,
+    namespacePrefix: string
+) => {
     if (LOGGER_TIMESTAMP_ENABLED) {
         namespaces.push(
             namespacePrefix,
@@ -13,13 +26,13 @@ const setTimestamp = (debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix) => {
     }
 
     debug.formatArgs = function (args) {
-        const { namespace: name, useColors } = this
+        const { namespace, useColors } = this
 
         if (useColors) {
             let timestamp = '  '
 
             const useTimestamp =
-                namespaces.findIndex((n) => name.startsWith(n)) >= 0
+                namespaces.findIndex((n) => namespace.startsWith(n)) >= 0
 
             if (useTimestamp) {
                 const date = new Date()
@@ -32,7 +45,7 @@ const setTimestamp = (debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix) => {
 
             const c = this.color
             const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c)
-            const prefix = `${colorCode};1m${name} \u001B[0m`
+            const prefix = `${colorCode};1m${namespace} \u001B[0m`
 
             args[0] =
                 timestamp + prefix + args[0].split('\n').join('\n' + prefix)
@@ -41,15 +54,13 @@ const setTimestamp = (debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix) => {
             )
         } else {
             const getDate = () => {
-                if (debug.inspectOpts.hideDate) {
+                if (debug.inspectOpts?.hideDate) {
                     return ''
                 }
                 return new Date().toISOString() + ' '
             }
 
-            args[0] = getDate() + name + ' ' + args[0]
+            args[0] = getDate() + namespace + ' ' + args[0]
         }
     }
 }
-
-module.exports = { setTimestamp }

@@ -314,9 +314,8 @@ $RECYCLE.BIN/
 .idea
 .vscode
 
-*.js
-!src/helpers.js
-
 *.d.ts
 
 .npm-upgrade.json
+
+build

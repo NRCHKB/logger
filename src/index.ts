@@ -1,8 +1,8 @@
-import Debug from 'debug'
 import { Node } from 'node-red'
-import { CallbackType, Logger, LoggerSetupData } from './types'
+import { CallbackType, Logger, LoggerSetupData } from './types/types'
+import { setTimestamp } from './helpers'
 
-const helpers = require('./helpers')
+const Debug = require('debug')
 
 let LOGGER_DEBUG_COLOR: string = process.env.LOGGER_DEBUG_COLOR || '4'
 let LOGGER_ERROR_COLOR: string = process.env.LOGGER_ERROR_COLOR || '9'
@@ -60,7 +60,7 @@ export const loggerSetup = ({
             LOGGER_TIMESTAMP_ENABLED = timestampEnabled
         } else {
             timestampEnabled.split(',').forEach((n) => {
-                helpers.setTimestamp(Debug, true, n)
+                setTimestamp(Debug, true, n)
             })
         }
     }
@@ -88,7 +88,7 @@ export const logger: Logger = (
     messagePrefix,
     node?
 ) => {
-    helpers.setTimestamp(Debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix)
+    setTimestamp(Debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix)
 
     //DEBUG
     const debug = Debug(
