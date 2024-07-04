@@ -1,5 +1,5 @@
 import { Node } from 'node-red'
-import { CallbackType, Logger, LoggerSetupData } from './types/types'
+import { CallbackType, Logger, LoggerSetupData, LogLevel } from './types/types'
 import { setTimestamp } from './helpers'
 
 const Debug = require('debug')
@@ -134,10 +134,25 @@ export const logger: Logger = (
     }
     const logTrace = logMessage(trace, messagePrefix, node)
 
+    //LEVEL
+    const logLevel = (level: LogLevel) => {
+        switch (level) {
+            case LogLevel.DISABLED:
+                return () => {}
+            case LogLevel.DEBUG:
+                return logDebug
+            case LogLevel.ERROR:
+                return logError
+            case LogLevel.TRACE:
+                return logTrace
+        }
+    }
+
     return {
         debug: logDebug,
         error: logError,
         trace: logTrace,
+        level: logLevel,
     }
 }
 
