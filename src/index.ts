@@ -137,14 +137,14 @@ export const logger: Logger = (
     //LEVEL
     const logLevel = (level: LogLevel) => {
         switch (level) {
-            case LogLevel.DISABLED:
-                return () => {}
-            case LogLevel.DEBUG:
-                return logDebug
-            case LogLevel.ERROR:
-                return logError
-            case LogLevel.TRACE:
-                return logTrace
+        case LogLevel.DISABLED:
+            return () => {}
+        case LogLevel.DEBUG:
+            return logDebug
+        case LogLevel.ERROR:
+            return logError
+        case LogLevel.TRACE:
+            return logTrace
         }
     }
 

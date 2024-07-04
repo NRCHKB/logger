@@ -5,10 +5,10 @@ export type CallbackType = {
 }
 
 export enum LogLevel {
-    DISABLED = 0,
-    DEBUG = 1,
-    TRACE = 2,
-    ERROR = 3,
+    DISABLED = 'DISABLED',
+    DEBUG = 'DEBUG',
+    TRACE = 'TRACE',
+    ERROR = 'ERROR',
 }
 
 export type Loggers = {
