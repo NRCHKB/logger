@@ -1,29 +1,23 @@
-import 'should'
-
-import { describe, it } from 'mocha'
+import { describe, it } from 'vitest'
 import { LogLevel } from '../types/types'
 
 process.env.LOGGER_DEBUG_COLOR = '11'
 process.env.LOGGER_ERROR_COLOR = '12'
 process.env.LOGGER_TRACE_COLOR = '13'
 
-describe('Logger test suite:', function () {
-    this.timeout(30000)
-
-    it('should be loaded', function (done) {
-        const { logger } = require('../index')
+describe('Logger test suite:', () => {
+    it('should be loaded', () => {
+        const { logger } = require('../../build/index')
         const log = logger('LOGGER')
 
         log.debug('Yellow')
         log.error('Blue')
         log.trace('Pink')
         log.level(LogLevel.DEBUG)('Yellow')
-
-        done()
     })
 
-    it('setup', function (done) {
-        const { logger, loggerSetup } = require('../index')
+    it('setup', () => {
+        const { logger, loggerSetup } = require('../../build/index')
         loggerSetup({
             debugColor: '9',
             errorColor: '10',
@@ -41,12 +35,10 @@ describe('Logger test suite:', function () {
         log.error('Green')
         log.trace('Yellow')
         log.level(LogLevel.ERROR)('Green')
-
-        done()
     })
 
-    it('multiple loggers', function (done) {
-        const { logger } = require('../index')
+    it('multiple loggers', () => {
+        const { logger } = require('../../build/index')
 
         const log1 = logger(
             'LOGGER_SETUP_1',
@@ -68,12 +60,10 @@ describe('Logger test suite:', function () {
         log2.error('Green')
         log2.trace('Yellow')
         log2.level(LogLevel.ERROR)('Green')
-
-        done()
     })
 
-    it('set timestamp', function (done) {
-        const { logger, loggerSetup } = require('../index')
+    it('set timestamp', () => {
+        const { logger, loggerSetup } = require('../../build/index')
 
         loggerSetup({
             timestampEnabled: true,
@@ -108,19 +98,15 @@ describe('Logger test suite:', function () {
         log3.error('Green')
         log3.trace('Yellow')
         log3.level(LogLevel.DEBUG)('Red')
-
-        done()
     })
 
-    it('level test', function (done) {
-        const { logger } = require('../index')
+    it('level test', () => {
+        const { logger } = require('../../build/index')
         const log = logger('LOGGER')
 
         log.level(LogLevel.DISABLED)('DISABLED')
         log.level(LogLevel.ERROR)('ERROR', true)
         log.level(LogLevel.DEBUG)('DEBUG')
         log.level(LogLevel.TRACE)('TRACE')
-
-        done()
     })
 })
