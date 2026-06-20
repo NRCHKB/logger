@@ -1,6 +1,6 @@
 {
     "name": "@nrchkb/logger",
-    "version": "3.2.1",
+    "version": "3.3.0",
     "description": "Unified Logger for Node-RED nodes (using debug)",
     "main": "build/index.js",
     "scripts": {
@@ -14,12 +14,7 @@
         "type": "git",
         "url": "git+https://github.com/NRCHKB/logger.git"
     },
-    "keywords": [
-        "node-red",
-        "NRCHKB",
-        "logger",
-        "debug"
-    ],
+    "keywords": ["node-red", "NRCHKB", "logger", "debug"],
     "author": "Tadeusz Wyrzykowski <shaquu@icloud.com> (https://github.com/Shaquu)",
     "license": "Apache-2.0",
     "bugs": {
@@ -46,12 +41,8 @@
         "test": {
             "environment": "node",
             "testTimeout": 30000,
-            "include": [
-                "src/**/*.test.ts"
-            ]
+            "include": ["src/**/*.test.ts"]
         }
     },
-    "files": [
-        "/build"
-    ]
+    "files": ["/build"]
 }

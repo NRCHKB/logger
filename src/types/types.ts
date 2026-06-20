@@ -5,10 +5,20 @@ export type CallbackType = {
 }
 
 export enum LogLevel {
+    INHERIT = 'INHERIT',
     DISABLED = 'DISABLED',
     DEBUG = 'DEBUG',
     TRACE = 'TRACE',
     ERROR = 'ERROR',
+}
+
+export type LogLevelValue =
+    | LogLevel
+    | keyof typeof LogLevel
+    | Lowercase<keyof typeof LogLevel>
+
+export type LoggerOptions = {
+    level?: LogLevelValue
 }
 
 export type Loggers = {
@@ -38,5 +48,6 @@ export type Logger = (
     namespacePrefix: string,
     namespace?: string,
     messagePrefix?: string,
-    node?: Node
+    node?: Node,
+    options?: LoggerOptions
 ) => Loggers

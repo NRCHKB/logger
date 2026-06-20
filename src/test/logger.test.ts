@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { LogLevel } from '../types/types'
 
 process.env.LOGGER_DEBUG_COLOR = '11'
@@ -108,5 +108,37 @@ describe('Logger test suite:', () => {
         log.level(LogLevel.ERROR)('ERROR', true)
         log.level(LogLevel.DEBUG)('DEBUG')
         log.level(LogLevel.TRACE)('TRACE')
+    })
+
+    it('explicit disabled level suppresses node errors', () => {
+        const { logger } = require('../../build/index')
+        const node = {
+            id: 'node-id',
+            name: 'node-name',
+            error: vi.fn(),
+        }
+        const log = logger('LOGGER', 'SCOPED', undefined, node as any, {
+            level: LogLevel.DISABLED,
+        })
+
+        log.error('ERROR')
+
+        expect(node.error).not.toHaveBeenCalled()
+    })
+
+    it('explicit debug level includes errors', () => {
+        const { logger } = require('../../build/index')
+        const node = {
+            id: 'node-id',
+            name: 'node-name',
+            error: vi.fn(),
+        }
+        const log = logger('LOGGER', 'SCOPED', undefined, node as any, {
+            level: LogLevel.DEBUG,
+        })
+
+        log.error('ERROR')
+
+        expect(node.error).toHaveBeenCalledWith('ERROR')
     })
 })

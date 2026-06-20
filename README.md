@@ -28,6 +28,21 @@ log.error('Error message')
 log.trace('Trace message')
 ```
 
+You can also force a scoped threshold for one logger instance. This keeps
+callers independent from the process-wide `DEBUG` setting.
+
+```typescript
+import {logger, LogLevel} from "@nrchkb/logger";
+
+const log = logger('YOUR_NODE_SHORT_NAME', 'Runtime', 'Accessory', node, {
+    level: LogLevel.DEBUG
+})
+```
+
+Scoped levels are thresholds: `ERROR` emits errors, `DEBUG` emits errors and
+debug messages, `TRACE` emits all logger messages, `DISABLED` emits nothing,
+and `INHERIT` keeps the global/env behavior.
+
 Start you app in with DEBUG env
 
 ```bash

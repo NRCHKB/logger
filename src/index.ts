@@ -1,6 +1,15 @@
 import { Node } from 'node-red'
 import { setTimestamp } from './helpers'
-import { CallbackType, Logger, LoggerSetupData, LogLevel } from './types/types'
+import {
+    CallbackType,
+    Logger,
+    LoggerOptions,
+    LoggerSetupData,
+    LogLevel,
+    LogLevelValue,
+} from './types/types'
+
+export { LogLevel } from './types/types'
 
 const Debug = require('debug')
 
@@ -82,13 +91,52 @@ const logMessage = (
     }
 }
 
+const normalizeLogLevel = (level?: LogLevelValue): LogLevel => {
+    if (!level) {
+        return LogLevel.INHERIT
+    }
+
+    const normalizedLevel = String(level).toUpperCase()
+
+    return Object.values(LogLevel).includes(normalizedLevel as LogLevel)
+        ? (normalizedLevel as LogLevel)
+        : LogLevel.INHERIT
+}
+
+const isExplicitLevelEnabled = (
+    configuredLevel: LogLevel,
+    messageLevel: LogLevel
+): boolean => {
+    switch (configuredLevel) {
+        case LogLevel.DISABLED:
+            return false
+        case LogLevel.ERROR:
+            return messageLevel === LogLevel.ERROR
+        case LogLevel.DEBUG:
+            return (
+                messageLevel === LogLevel.ERROR ||
+                messageLevel === LogLevel.DEBUG
+            )
+        case LogLevel.TRACE:
+            return (
+                messageLevel === LogLevel.ERROR ||
+                messageLevel === LogLevel.DEBUG ||
+                messageLevel === LogLevel.TRACE
+            )
+        case LogLevel.INHERIT:
+            return true
+    }
+}
+
 export const logger: Logger = (
     namespacePrefix,
     namespace,
     messagePrefix,
-    node?
+    node?,
+    options?: LoggerOptions
 ) => {
     setTimestamp(Debug, LOGGER_TIMESTAMP_ENABLED, namespacePrefix)
+    const configuredLevel = normalizeLogLevel(options?.level)
 
     //DEBUG
     const debug = Debug(
@@ -97,6 +145,12 @@ export const logger: Logger = (
     debug.color = LOGGER_DEBUG_COLOR
     if (LOGGER_DEBUG_ENABLED) {
         debug.enabled = LOGGER_DEBUG_ENABLED
+    }
+    if (
+        configuredLevel === LogLevel.DEBUG ||
+        configuredLevel === LogLevel.TRACE
+    ) {
+        debug.enabled = true
     }
     const logDebug = logMessage(debug, messagePrefix, node)
 
@@ -108,6 +162,13 @@ export const logger: Logger = (
     )
     error.color = LOGGER_ERROR_COLOR
     error.enabled = LOGGER_ERROR_ENABLED
+    if (
+        configuredLevel === LogLevel.ERROR ||
+        configuredLevel === LogLevel.DEBUG ||
+        configuredLevel === LogLevel.TRACE
+    ) {
+        error.enabled = true
+    }
     const logError = (
         message: string,
         nodeError = true,
@@ -132,6 +193,9 @@ export const logger: Logger = (
     if (LOGGER_TRACE_ENABLED) {
         trace.enabled = LOGGER_TRACE_ENABLED
     }
+    if (configuredLevel === LogLevel.TRACE) {
+        trace.enabled = true
+    }
     const logTrace = logMessage(trace, messagePrefix, node)
 
     //LEVEL
@@ -145,15 +209,29 @@ export const logger: Logger = (
                 return logError
             case LogLevel.TRACE:
                 return logTrace
+            case LogLevel.INHERIT:
+                return logDebug
         }
     }
 
     return {
-        debug: logDebug,
-        error: logError,
-        trace: logTrace,
+        debug:
+            configuredLevel === LogLevel.INHERIT ||
+            isExplicitLevelEnabled(configuredLevel, LogLevel.DEBUG)
+                ? logDebug
+                : () => {},
+        error:
+            configuredLevel === LogLevel.INHERIT ||
+            isExplicitLevelEnabled(configuredLevel, LogLevel.ERROR)
+                ? logError
+                : () => {},
+        trace:
+            configuredLevel === LogLevel.INHERIT ||
+            isExplicitLevelEnabled(configuredLevel, LogLevel.TRACE)
+                ? logTrace
+                : () => {},
         level: logLevel,
     }
 }
 
-module.exports = { logger, loggerSetup }
+module.exports = { logger, loggerSetup, LogLevel }
